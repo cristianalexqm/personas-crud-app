@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Mi Aplicación')</title>
     @vite('resources/css/app.css') <!-- Incluir Tailwind con Vite -->
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Opcional: Iconos -->
+
 </head>
+
 <body class="bg-gray-900 text-white flex">
 
     <!-- Sidebar -->
@@ -18,12 +21,7 @@
             <ul class="space-y-2">
                 <li>
                     <a href="{{ route('personas.index') }}" class="flex items-center p-3 hover:bg-gray-700 rounded">
-                        <i class="fas fa-home mr-2"></i> Inicio
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('personas.create') }}" class="flex items-center p-3 hover:bg-gray-700 rounded">
-                        <i class="fas fa-user-plus mr-2"></i> Crear Persona
+                        <i class="fas fa-home mr-2"></i> Personas
                     </a>
                 </li>
                 <li>
@@ -56,13 +54,14 @@
                 </button>
             </div>
         </header>
-        
+
 
         <!-- Content -->
         <main class="p-6 flex-grow overflow-y-auto">
             @yield('content')
         </main>
     </div>
-
+    
 </body>
+
 </html>

@@ -12,6 +12,6 @@ class PersonasSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\personas::factory()->count(10)->create();
+        \App\Models\personas::factory()->count(50)->create();
     }
 }

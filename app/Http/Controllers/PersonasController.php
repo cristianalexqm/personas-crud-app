@@ -2,87 +2,92 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\personas;
+use App\Services\PersonasService;
 use Illuminate\Http\Request;
 
 class PersonasController extends Controller
 {
+    protected $personasService;
+
     /**
-     * Display a listing of the resource.
+     * Constructor para inyectar el servicio de personas.
+     */
+    public function __construct(PersonasService $personasService)
+    {
+        $this->personasService = $personasService;
+    }
+
+    /**
+     * Mostrar una lista de todas las personas.
      */
     public function index()
     {
-        $personas = personas::all();
+        $personas = $this->personasService->getAllPersonas();
         return view('personas.index', compact('personas'));
     }
 
-
     /**
-     * Show the form for creating a new resource.
+     * Mostrar el formulario para crear una nueva persona.
      */
     public function create()
     {
         return view('personas.create');
     }
 
-
     /**
-     * Store a newly created resource in storage.
+     * Guardar una nueva persona en la base de datos.
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'nombre' => 'required|string|max:255',
             'edad' => 'required|integer',
             'email' => 'required|email|unique:personas,email',
         ]);
 
-        personas::create($request->all());
+        $this->personasService->createPersona($data);
         return redirect()->route('personas.index')->with('success', 'Persona creada exitosamente.');
     }
 
-
     /**
-     * Display the specified resource.
+     * Mostrar los detalles de una persona específica.
      */
-    public function show(personas $personas)
+    public function show($id)
     {
-        return view('personas.show', compact('personas'));
-
+        $persona = $this->personasService->getPersonaById($id);
+        return view('personas.show', compact('persona'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Mostrar el formulario para editar una persona existente.
      */
-    public function edit(personas $persona)
+    public function edit($id)
     {
+        $persona = $this->personasService->getPersonaById($id);
         return view('personas.edit', compact('persona'));
     }
 
-
     /**
-     * Update the specified resource in storage.
+     * Actualizar una persona en la base de datos.
      */
-    public function update(Request $request, personas $persona)
+    public function update(Request $request, $id)
     {
-        $request->validate([
+        $data = $request->validate([
             'nombre' => 'required|string|max:255',
             'edad' => 'required|integer',
-            'email' => 'required|email|unique:personas,email,' . $persona->id,
+            'email' => 'required|email|unique:personas,email,' . $id,
         ]);
 
-        $persona->update($request->all());
+        $this->personasService->updatePersona($data, $id);
         return redirect()->route('personas.index')->with('success', 'Persona actualizada exitosamente.');
     }
 
-
     /**
-     * Remove the specified resource from storage.
+     * Eliminar una persona de la base de datos.
      */
-    public function destroy(personas $persona)
+    public function destroy($id)
     {
-        $persona->delete();
+        $this->personasService->deletePersona($id);
         return redirect()->route('personas.index')->with('success', 'Persona eliminada exitosamente.');
     }
-
 }
